@@ -5,65 +5,60 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Markdown from './Markdown';
 import { useEffect, useState } from 'react';
+import post1 from './blog-post.1.md';
+import post2 from './blog-post.2.md';
+import post3 from './blog-post.3.md';
 
 
-function Main(props) {
-  const { posts, title } = props;
+
+function Main({ title }) {
   const [postContents, setPostContents] = useState([]);
 
   useEffect(() => {
-    //boucle de posts (url ressources) et recuperation du contenu
-    // par le bias de la fonction fetch 
+      // Fonction pour récupérer le contenu de chaque fichier Markdown
+      const fetchPostContent = async (post) => {
+          try {
+              const response = await fetch(post);
+              const content = await response.text();
+              return content;
+          } catch (error) {
+              console.error('Erreur lors du chargement du post :', error);
+              return ''; // Retourne une chaîne vide en cas d'erreur
+          }
+      };
 
-    let nextId = 0;
-
-    posts.map((post) => (
-
-      fetch(post)
-      .then( (response) => response.text())
-      .then( (text) => setPostContents([...postContents,{id:nextId++,text:text}]) ) 
-      .catch( (erreur) => console.log("requete echouée..."+erreur))
-      ))
-
+      Promise.all([fetchPostContent(post1), fetchPostContent(post2), fetchPostContent(post3)])
+          .then((arrayTexts) => setPostContents(arrayTexts))
+          .catch((error) => console.error('Erreur lors du chargement des posts :', error));
   }, []);
 
-
-
   return (
-    <Grid
-      item
-      xs={12}
-      md={8}
-      sx={{
-        '& .markdown': {
-          py: 3,
-        },
-      }}
-    >
-      <Typography variant="h6" gutterBottom>
-        {title}
-      </Typography>
-      <Divider />
-      
-      {/*boucle du contenu des posts pour la creation 
-      des composants Markdown */} 
-      
-      {postContents.map((postContent) => (
-        <Markdown className="markdown" key={postContent.text.substring(0, 40)}>
-          {postContent.text}
-        </Markdown>
-      ))}
-      
-     
+      <Grid
+          item
+          xs={12}
+          md={8}
+          sx={{
+              '& .markdown': {
+                  py: 3,
+              },
+          }}
+      >
+          <Typography variant="h6" gutterBottom>
+              {title}
+          </Typography>
+          <Divider />
 
-
-
-    </Grid>
+          {/* Afficher le contenu des articles */}
+          {postContents.map((postContent, index) => (
+              <Markdown className="markdown" key={index}>
+                  {postContent}
+              </Markdown>
+          ))}
+      </Grid>
   );
 }
 
 Main.propTypes = {
-  posts: PropTypes.arrayOf(PropTypes.string).isRequired,
   title: PropTypes.string.isRequired,
 };
 

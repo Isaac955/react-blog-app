@@ -75,13 +75,13 @@ const mainFeaturedPost = {
   // TODO remove, this demo shouldn't need to reset the theme.
   const defaultTheme = createTheme();
   
-  export default function Technology() {
+  export default function Travel() {
     return (
       <ThemeProvider theme={defaultTheme}>
         <CssBaseline />
         <Container maxWidth="lg">
-          <Header title="Technology" sections={sections} />
-            Bievenue sur la page "Technology"
+          <Header title="Travel" sections={sections} />
+            Bievenue sur la page "Travel"
               </Container>
         <Footer
           title="Footer"
