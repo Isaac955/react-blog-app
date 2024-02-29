@@ -17,6 +17,8 @@ import post2 from './blog-post.2.md';
 import post3 from './blog-post.3.md';
 import { sections } from './sectionArray';
 import Blog from './Blog';
+import GridTable from '../GridTable';
+import { useEffect, useState } from 'react';
 
 const mainFeaturedPost = {
     title: 'Title of a longer featured blog post',
@@ -76,13 +78,34 @@ const mainFeaturedPost = {
   const defaultTheme = createTheme();
   
   export default function Technology() {
+
+    const [responseMeteo, setResponseMeteo] = useState([]);
+  
+  
+    useEffect(() => {
+     
+    
+      const url = "https://api.open-meteo.com/v1/forecast"+
+                   "?latitude=52.52&longitude=13.41&"+
+                   "past_days=10&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m";
+  
+      fetch(url).then( 
+                 (response) => response.json()).then( 
+                             (json) => console.log(json));
+  
+    }, []);
+  
+  
     return (
       <ThemeProvider theme={defaultTheme}>
         <CssBaseline />
         <Container maxWidth="lg">
-          <Header title="Technology" sections={sections} />
-            Bievenue sur la page "Technology"
-              </Container>
+          <Header title="Blog" sections={sections} />
+          <main>
+              <p> Technology page </p>
+              <GridTable results = {responseMeteo}/>
+          </main>
+        </Container>
         <Footer
           title="Footer"
           description="Something here to give the footer a purpose!"
@@ -90,4 +113,3 @@ const mainFeaturedPost = {
       </ThemeProvider>
     );
   }
-  
